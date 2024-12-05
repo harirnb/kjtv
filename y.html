@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KJTv - Endless Entertainment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        header p {
+            font-size: 18px;
+            margin: 5px 0 0;
+        }
+
+        .button-container {
+            margin: 20px 0;
+        }
+
+        .button-container button {
+            background-color: #007BFF;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            display: block;
+            width: 200px;
+            margin: 10px auto;
+        }
+
+        .button-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .video-container {
+            margin: 20px auto;
+            width: 840px; /* Increased width */
+            height: 630px; /* Increased height */
+            position: relative;
+            overflow: hidden; /* Hide any overflow content */
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            object-fit: contain; /* Ensure the video fits without distortion */
+        }
+
+        .control-buttons {
+            position: absolute;
+            bottom: 10px; /* Position buttons at the bottom */
+            left: 10px;
+            right: 10px;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .control-buttons button {
+            margin: 5px;
+            background-color: rgba(40, 167, 69, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .control-buttons button:hover {
+            background-color: rgba(40, 167, 69, 1);
+        }
+
+        .note {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .current-channel {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        .description {
+            font-size: 14px;
+            color: #555;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>KJTv</h1>
+        <p>Endless Entertainment</p>
+    </header>
+
+    <div class="button-container">
+        <button onclick="changeChannel('Star Sports 3', 'https://cdn.crichdplays.ru/embed2.php?id=starsp3')">Star Sports 3</button>
+        <p class="description">Catch live events and sports updates from Star Sports 3.</p>
+
+        <button onclick="changeChannel('Star Sports 4', 'https://cdn.crichdplays.ru/embed2.php?id=starsp4')">Star Sports 4</button>
+        <p class="description">Watch live sports action from Star Sports 4.</p>
+
+        <button onclick="changeChannel('Willow TV', 'https://cdn.crichdplays.ru/embed2.php?id=willow')">Willow TV</button>
+        <p class="description">The best channel for cricket lovers worldwide.</p>
+
+        <button onclick="changeChannel('Sky Sports 2', 'https://cdn.crichdplays.ru/embed2.php?id=skysp2')">Sky Sports 2</button>
+        <p class="description">Live sports coverage from Sky Sports 2.</p>
+
+        <button onclick="changeChannel('Sky Sports FB', 'https://cdn.crichdplays.ru/embed2.php?id=skyfb')">Sky Sports FB</button>
+        <p class="description">Follow all the football action on Sky Sports FB.</p>
+    </div>
+
+    <div class="current-channel">
+        Currently Playing: <span id="currentChannel">Star Sports 4</span>
+    </div>
+
+    <div class="video-container">
+        <iframe id="videoFrame" src="https://cdn.crichdplays.ru/embed2.php?id=starsp4" allowfullscreen></iframe>
+        
+        <!-- Control Buttons: Fullscreen and Mute/Unmute -->
+        <div class="control-buttons">
+            <button id="fullscreenButton" onclick="goFullscreen()">🔲 Fullscreen</button>
+            <button id="muteButton" onclick="toggleMute()">🔊 Mute</button>
+        </div>
+        
+        <div class="note">🔊 Video is unmuted by default. Click to mute/unmute.</div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 KJTv. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Function to dynamically change the channel and update the display
+        function changeChannel(channelName, url) {
+            const videoFrame = document.getElementById('videoFrame');
+
+            // Update the iframe source to load the new channel
+            videoFrame.src = url + '&autoplay=1';
+
+            // Update the currently playing channel name
+            document.getElementById('currentChannel').textContent = channelName;
+
+            // Scroll to the video area when a new channel is selected
+            videoFrame.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        let isMuted = false;
+
+        // Function to toggle mute/unmute
+        function toggleMute() {
+            const videoFrame = document.getElementById('videoFrame');
+            const muteButton = document.getElementById('muteButton');
+            const frameWindow = videoFrame.contentWindow;
+
+            if (isMuted) {
+                // Unmute the video
+                try {
+                    frameWindow.postMessage({ event: 'command', func: 'unMute', args: [] }, '*');
+                } catch (error) {
+                    console.warn('Unmute not supported for this iframe content.');
+                }
+                muteButton.textContent = "🔊 Unmute";  // Change button text
+                muteButton.style.backgroundColor = '#28a745';  // Green color
+            } else {
+                // Mute the video
+                try {
+                    frameWindow.postMessage({ event: 'command', func: 'mute', args: [] }, '*');
+                } catch (error) {
+                    console.warn('Mute not supported for this iframe content.');
+                }
+                muteButton.textContent = "🔇 Mute";  // Change button text
+                muteButton.style.backgroundColor = '#dc3545';  // Red color
+            }
+
+            isMuted = !isMuted;  // Toggle the mute state
+        }
+
+        // Function to enable fullscreen for the video iframe
+        function goFullscreen() {
+            const videoFrame = document.getElementById('videoFrame');
+            if (videoFrame.requestFullscreen) {
+                videoFrame.requestFullscreen();
+            } else if (videoFrame.mozRequestFullScreen) {
+                videoFrame.mozRequestFullScreen(); // Firefox
+            } else if (videoFrame.webkitRequestFullscreen) {
+                videoFrame.webkitRequestFullscreen(); // Chrome, Safari, and Opera
+            } else if (videoFrame.msRequestFullscreen) {
+                videoFrame.msRequestFullscreen(); // IE/Edge
+            }
+        }
+    </script>
+
+</body>
+</html>
