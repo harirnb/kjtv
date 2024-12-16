@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KJTv - Endless Entertainment. Watch your favorite sports and shows live.">
+    <meta name="keywords" content="KJTv, live TV, sports streaming, entertainment">
     <title>KJTv - Endless Entertainment</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
         /* Global Styles */
         body {
@@ -35,7 +38,7 @@
             color: #a0a0a0;
         }
 
-        .button-container {
+        nav {
             margin: 30px auto;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -44,7 +47,7 @@
             padding: 0 20px;
         }
 
-        .button-container button {
+        nav button {
             background: linear-gradient(135deg, #0056b3, #007bff);
             border: 2px solid transparent;
             color: white;
@@ -57,7 +60,7 @@
             transition: all 0.3s ease;
         }
 
-        .button-container button:hover {
+        nav button:hover {
             background: linear-gradient(135deg, #0045a3, #005dc0);
             transform: translateY(-4px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6), 0 0 15px #007bff;
@@ -79,6 +82,26 @@
             width: 100%;
             height: 100%;
             border: none;
+        }
+
+        .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 6px solid rgba(255, 255, 255, 0.3);
+            border-top: 6px solid #00e6ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+            z-index: 2;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
         .control-buttons {
@@ -112,6 +135,7 @@
             font-size: 1.4em;
             font-weight: bold;
             color: #00ff6e;
+            transition: color 0.3s ease;
         }
 
         footer {
@@ -134,28 +158,27 @@
         <p>Endless Entertainment</p>
     </header>
 
-    <div class="button-container">
-        <button onclick="changeChannel('Star Sports Select', 'https://cdn.crichdplays.ru/embed2.php?id=starsp3')">Star Sports Select</button>
-        <button onclick="changeChannel('Star Sports 1', 'https://cdn.crichdplays.ru/embed2.php?id=starsp')">Star Sports 1 HD</button>
-        <button onclick="changeChannel('Star Sports Hindi', 'https://cdn.crichdplays.ru/embed2.php?id=starsp3')">Star Sports Hindi</button>
-        <button onclick="changeChannel('Willow TV', 'https://cdn.crichdplays.ru/embed2.php?id=willow')">Willow TV</button>
-        <button onclick="changeChannel('Sky Cricket', 'https://cdn.crichdplays.ru/embed2.php?id=skysp2')">Sky Cricket</button>
-        <button onclick="changeChannel('OSN Cric', 'https://cdn.crichdplays.ru/embed2.php?id=osncric')">OSN Cric</button>
-        <button onclick="changeChannel('Premier League', 'https://cdn.crichdplays.ru/embed2.php?id=skysp5')">Premier League</button>
-        <button onclick="changeChannel('LaLiga', 'https://cdn.crichdplays.ru/embed2.php?id=supersp10')">LaLiga</button>
-        <button onclick="changeChannel('Astro Cric', 'https://cdn.crichdplays.ru/embed2.php?id=astrocric')">Astro Cric</button>
-        <button onclick="changeChannel('Sky Football', 'https://cdn.crichdplays.ru/embed2.php?id=skyfb')">Sky Football</button>
-        <button onclick="changeChannel('Star Sports 2 HD', 'https://cdn.crichdplays.ru/embed2.php?id=starsp2')">Star Sports 2 HD</button>
-    </div>
+    <nav>
+        <button aria-label="Switch to Star Sports Select" onclick="changeChannel('Star Sports Select', 'https://cdn.crichdplays.ru/embed2.php?id=starsp3')">Star Sports Select</button>
+        <button aria-label="Switch to Star Sports 1" onclick="changeChannel('Star Sports 1', 'https://cdn.crichdplays.ru/embed2.php?id=starsp')">Star Sports 1 HD</button>
+        <button aria-label="Switch to Star Sports Hindi" onclick="changeChannel('Star Sports Hindi', 'https://cdn.crichdplays.ru/embed2.php?id=starsp3')">Star Sports Hindi</button>
+        <button aria-label="Switch to Willow TV" onclick="changeChannel('Willow TV', 'https://cdn.crichdplays.ru/embed2.php?id=willow')">Willow TV</button>
+        <button aria-label="Switch to Sky Cricket" onclick="changeChannel('Sky Cricket', 'https://cdn.crichdplays.ru/embed2.php?id=skysp2')">Sky Cricket</button>
+        <button aria-label="Switch to OSN Cric" onclick="changeChannel('OSN Cric', 'https://cdn.crichdplays.ru/embed2.php?id=osncric')">OSN Cric</button>
+        <button aria-label="Switch to Premier League" onclick="changeChannel('Premier League', 'https://cdn.crichdplays.ru/embed2.php?id=skysp5')">Premier League</button>
+        <button aria-label="Switch to LaLiga" onclick="changeChannel('LaLiga', 'https://cdn.crichdplays.ru/embed2.php?id=supersp10')">LaLiga</button>
+        <button aria-label="Switch to Astro Cric" onclick="changeChannel('Astro Cric', 'https://cdn.crichdplays.ru/embed2.php?id=astrocric')">Astro Cric</button>
+        <button aria-label="Switch to Sky Football" onclick="changeChannel('Sky Football', 'https://cdn.crichdplays.ru/embed2.php?id=skyfb')">Sky Football</button>
+        <button aria-label="Switch to Star Sports 2 HD" onclick="changeChannel('Star Sports 2 HD', 'https://cdn.crichdplays.ru/embed2.php?id=starsp2')">Star Sports 2 HD</button>
+    </nav>
 
-    <div class="current-channel">
-        Currently Playing: <span id="currentChannel">KJTv</span>
-    </div>
+    <div class="current-channel" id="currentChannel">Currently Playing: KJTv</div>
 
     <div class="video-container">
-        <iframe id="videoFrame" src="https://cdn.crichdplays.ru/embed2.php?id=starsp4&autoplay=1" allowfullscreen referrerpolicy="no-referrer" sandbox="allow-same-origin allow-scripts"></iframe>
+        <div class="loading-spinner" id="loadingSpinner"></div>
+        <iframe id="videoFrame" src="https://cdn.crichdplays.ru/embed2.php?id=starsp4&autoplay=1" allowfullscreen referrerpolicy="no-referrer" sandbox="allow-same-origin allow-scripts" loading="lazy"></iframe>
         <div class="control-buttons">
-            <button onclick="goFullscreen()">🔲 Fullscreen</button>
+            <button aria-label="Fullscreen" onclick="goFullscreen()">🔲 Fullscreen</button>
         </div>
     </div>
 
@@ -166,8 +189,21 @@
     <script>
         function changeChannel(channelName, url) {
             const videoFrame = document.getElementById('videoFrame');
+            const currentChannel = document.getElementById('currentChannel');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+
+            loadingSpinner.style.display = 'block'; // Show spinner
             videoFrame.src = `${url}&autoplay=1`;
-            document.getElementById('currentChannel').textContent = channelName;
+            currentChannel.textContent = `Currently Playing: ${channelName}`;
+
+            videoFrame.onload = () => {
+                loadingSpinner.style.display = 'none'; // Hide spinner once loaded
+            };
+
+            videoFrame.onerror = () => {
+                loadingSpinner.style.display = 'none'; // Hide spinner if error
+                alert('Error loading the channel. Please try again.');
+            };
         }
 
         function goFullscreen() {
